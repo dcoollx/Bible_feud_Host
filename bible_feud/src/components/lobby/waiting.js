@@ -1,15 +1,16 @@
 import React from 'react';
+import {Link} from 'react-router-dom'; 
 
 export default class Waiting extends React.Component{
    state = {
-     players : []
+     players : [{name:'jordan'}]
     }
     componentDidMount(){
       //todo create a poll that checks number of players in a room
     }
   render(){
-    let list = this.state.players.map(()=>{
-      return (<div className = 'player'></div>);
+    let list = this.state.players.map((player)=>{
+    return (<div className = 'player'>{player.name} has joined</div>);
     });
   return (
     <div id="waiting">
@@ -18,6 +19,7 @@ export default class Waiting extends React.Component{
     <ul>
       {list}
     </ul>
+    <button><Link to="/game">Start Now</Link></button>
     </div>
   );
   }
