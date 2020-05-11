@@ -1,10 +1,10 @@
 import React from 'react';
 import {BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
 import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 //components
 import Waiting from './components/lobby/waiting';
-import RoomCode from './components/lobby/RoomCode';
 import Game from './components/game/game';
 
 function App() {
@@ -28,7 +28,6 @@ function App() {
               </div>
             </Route>
             <Route exact path="/waiting">
-              <RoomCode/>
               <Waiting/>
             </Route>
             <Route exact path="/game">

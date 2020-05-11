@@ -1,4 +1,5 @@
 import React from 'react';
+import io from 'socket.io-client';
 
 export default class Game extends React.Component{
   state = {
@@ -14,6 +15,7 @@ export default class Game extends React.Component{
 
   }
   componentDidMount(){
+    //
     this.setState({
     timer : {start : Date.now(), tick : setInterval(()=>{
       let newTimer = {...this.state.timer}
