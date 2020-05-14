@@ -1,58 +1,65 @@
 import React from 'react';
 import {Link} from 'react-router-dom'; 
-import io from 'socket.io-client';
 
 export default class Waiting extends React.Component{
-   state = {
-     room : {roomCode : null, players : [{name:'jordan'}]},
-     host : true,
-    }
+
+  state = {
+    room : this.props.room,
+  }
+  
   componentDidMount(){
-    let socket = io.connect('http://localhost:8000/games');
-    this.setState({socket});
       //TODO, need to check if this user has already reserved a room 
       //and not request a new from everytime
-
+    if(!this.props.conn){
+      window.location.pathname = '/';
+    }
 
       //todo create a poll that checks number of players in a room
         //connect to server
-    if(this.state.host){
-      //let roomCode = hri.random();
-    socket.emit('create');
-    socket.on('newRoom',(roomCode)=>{
-    let room = {...this.state.room}
-    room.roomCode = roomCode.roomCode;
-    this.setState({room},()=>{
-      socket.emit('join',{roomCode : this.state.room.roomCode});
+        console.log(this.props);
+    if(this.props.host === true){
+    this.props.conn.emit('create');
+    this.props.conn.on('newRoom',(roomCode)=>{
+      this.props.updateRoom(roomCode.roomCode,()=>{
+        this.props.conn.emit('join',{roomCode : this.props.room.roomCode});
       });
     });
     }else{//not host
-      socket.emit('join',{roomCode : this.state.room.roomCode});
+      this.props.conn.emit('join',{roomCode : this.props.room.roomCode});
     }
+
+    this.props.conn.on('joined',(player)=>{
+      let room = this.state.room
+      room.players.push(player);
+      this.setState({room});
+
+    });
     
   }
   componentWillUnmount(){
-    this.state.socket.close();
+    //this.props.conn.close();
   }
   startGame(){
-    if(this.state.socket){
-      this.state.socket.broadcast.in(this.state.room.roomCode).emit('startGame');
+    if(this.props.conn){
+      this.props.conn.broadcast.in(this.props.room.roomCode).emit('startGame');
     }
 
   }
   render(){
-    let list = this.state.room.players.map((player)=>{
-    return (<div className = 'player'>{player.name} has joined</div>);
+    let list = this.state.room.players.map((player,i)=>{
+    return (<li key={i} className = 'player'>{player.name} has joined</li>);
     });
   return (
     <div id="waiting">
-      <p>Your Game Code is: <code>{this.state.room.roomCode}</code></p>
+      <p>Your Game Code is: <code>{this.props.room.roomCode}</code></p>
     <h2>Waiting for everyone to join</h2>
     <progress></progress>
     <ul>
       {list}
     </ul>
-    <button><Link to="/game">Start Now</Link></button>
+    <button onClick={(e)=>{
+      this.props.conn.emit('start');
+    }}>Start Now</button>
     </div>
   );
   }
