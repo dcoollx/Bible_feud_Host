@@ -41,9 +41,10 @@ class App extends React.Component {
     <div className="App">
       <header>
         <nav id="main" aria-label="Main">
-          <Link to="/">Home</Link>
-          <Link>about</Link>
-          <Link>login</Link>
+          <Link to="/">Home </Link>
+          <Link>Language </Link>
+          <Link>Login </Link>
+          <Link>Play</Link>
         </nav>
       </header>
       <main className="container">

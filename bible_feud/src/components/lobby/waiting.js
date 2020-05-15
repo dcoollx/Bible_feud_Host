@@ -1,7 +1,7 @@
 import React from 'react';
-import {Link} from 'react-router-dom'; 
+import {Link, withRouter} from 'react-router-dom'; 
 
-export default class Waiting extends React.Component{
+class Waiting extends React.Component{
 
   state = {
     room : this.props.room,
@@ -34,6 +34,12 @@ export default class Waiting extends React.Component{
       this.setState({room});
 
     });
+
+    this.props.conn.on('start',()=>{
+      //todo add count down
+      this.props.history.push('/game');
+      console.log('starting game');
+    });
     
   }
   componentWillUnmount(){
@@ -57,10 +63,11 @@ export default class Waiting extends React.Component{
     <ul>
       {list}
     </ul>
-    <button onClick={(e)=>{
+    <button disabled={!this.props.host} onClick={(e)=>{
       this.props.conn.emit('start');
     }}>Start Now</button>
     </div>
   );
   }
 }
+export default withRouter(Waiting)

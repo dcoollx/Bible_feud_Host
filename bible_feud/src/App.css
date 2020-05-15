@@ -11,7 +11,12 @@ html, body{
   nav#main{
     width:100vw;
     margin:none;
-    background-color: azure;
+    background-color: cadetblue;
+    color:white;
+    min-height: 5vh;
+  }
+  nav#main > a{
+    color:white;
   }
   button{
     border : none;
@@ -19,9 +24,11 @@ html, body{
     border-radius: 15px;
     align-self: center;
   }
+  button:hover{
+    background-color: cadetblue;
+  }
   main{
     margin:auto;
     height:100vh;
-    
   }
 }

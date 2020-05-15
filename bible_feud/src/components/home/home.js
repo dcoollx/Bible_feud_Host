@@ -13,25 +13,19 @@ class home extends React.Component{
     });
   }
   render(props){
-    if(!this.state.join){
     return (
       <div id="home">
         <div className="jumbotron">
           <div className="row">
-            <h1>Bible Feud</h1>
+            <h1 className="col">Bible Feud</h1>
           </div>
-        <button className="play">PLAY</button>;
+          </div>
+          <div className="row">
+        <button className="play col">PLAY</button>;
         </div>
-        <button onClick={()=>this.hostGame()}>Host a game</button>
-        <button onClick={()=>this.onJoinClick()}>Join A game</button>
-        <Link to='/waiting'>test</Link>
-      </div>
-    );
-    }else{
-      return (
-      <div id="home">
-        <h1>Bible Feud</h1>
-        <button>Host a game</button>
+        <div className="row">
+        <button className="col" onClick={()=>this.hostGame()}>Host a game</button>
+        {!this.state.join ? (<button className="col"  onClick={()=>this.onJoinClick()}>Join A game</button>) : (
         <form onSubmit={(e)=>{
           e.preventDefault();
           let roomCode = e.target['roomCode_input'].value;
@@ -45,9 +39,10 @@ class home extends React.Component{
         <label>Enter Game Code</label>
         <input id="roomCode_input" name="roomCode_input" placeholder="Room Code"/>
         <button type="submit">Join A game</button>
-        </form>
-      </div>);
-    }
+        </form>)}
+        </div>
+      </div>
+    );
   }
 }
 export default withRouter(home);
