@@ -29,7 +29,8 @@ class App extends React.Component {
   }
   
   componentDidMount(){
-    let conn = io('http://localhost:8000/games');
+    let url = 'https://bible-fued-server.herokuapp.com/';
+    let conn = io(url + 'games');
     this.setState({conn});
     //todo set up disconnection event
     //conn.on('disconnect',()=>{});
