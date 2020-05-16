@@ -1,3 +1,4 @@
 /* this file should be used to import other css files */
 
 @import './home.css';
+@import './game.css';

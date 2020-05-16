@@ -3,6 +3,7 @@ import io from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import 'font-awesome';
 
 //components
 import Home from './components/home/home';
