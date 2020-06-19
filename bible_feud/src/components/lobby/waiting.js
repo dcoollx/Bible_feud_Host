@@ -10,28 +10,31 @@ class Waiting extends React.Component{
   componentDidMount(){
       //TODO, need to check if this user has already reserved a room 
       //and not request a new from everytime
+      let name = localStorage.getItem('name');
+
     if(!this.props.conn){
       window.location.pathname = '/';
     }
 
       //todo create a poll that checks number of players in a room
         //connect to server
-        console.log(this.props);
+        //console.log(this.props);
     if(this.props.host === true){
     this.props.conn.emit('create');
     this.props.conn.on('newRoom',(roomCode)=>{
       this.props.updateRoom(roomCode.roomCode,()=>{
-        this.props.conn.emit('join',{roomCode : this.props.room.roomCode});
+        this.props.conn.emit('join',{roomCode : this.props.room.roomCode, name});
       });
     });
     }else{//not host
-      this.props.conn.emit('join',{roomCode : this.props.room.roomCode});
+      this.props.conn.emit('join',{roomCode : this.props.room.roomCode, name});
     }
 
     this.props.conn.on('joined',(player)=>{
       let room = this.state.room
-      room.players.push(player);
+      room.players = player;
       this.setState({room});
+      console.log('players have updated',player);
 
     });
 
@@ -43,7 +46,8 @@ class Waiting extends React.Component{
     
   }
   componentWillUnmount(){
-    //this.props.conn.close();
+    console.log('leaving');
+    this.props.conn.emit('leave',this.props.host);
   }
   startGame(){
     if(this.props.conn){
@@ -53,11 +57,11 @@ class Waiting extends React.Component{
   }
   render(){
     let list = this.state.room.players.map((player,i)=>{
-    return (<li key={i} className = 'player'>{player.name} has joined</li>);
+    return (<li key={i} className = 'player'>{localStorage.getItem('name') === player.name ? 'You have ' : player.name + ' has '}joined</li>);
     });
   return (
     <div id="waiting">
-      <p>Your Game Code is: <code>{this.props.room.roomCode}</code></p>
+      <p>Your Game Code is: <code>{this.props.room.roomCode}</code>| {this.props.host && <span>HOST</span>}</p>
     <h2>Waiting for everyone to join</h2>
     <progress></progress>
     <ul>

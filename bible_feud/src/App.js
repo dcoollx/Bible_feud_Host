@@ -3,7 +3,8 @@ import io from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'font-awesome';
+import 'font-awesome/css/font-awesome.css';
+import dotenv from 'dotenv';
 
 //components
 import Home from './components/home/home';
@@ -13,7 +14,7 @@ import Game from './components/game/game';
 class App extends React.Component {
   state = {
     conn :null,
-    room : {roomCode : null, players : [{name:'jordan'}]},
+    room : {roomCode : null, players : []},
     host:false
   }
   updateRoomCode = (roomCode, callback)=>{
@@ -30,9 +31,14 @@ class App extends React.Component {
   }
   
   componentDidMount(){
-    let url = 'https://bible-fued-server.herokuapp.com/';
+    if(this.state.conn){
+      this.state.conn.emit('leave');
+    }else{
+    let url = process.env.SERVER_URL || '10.0.0.109:8000/';
+    //'https://bible-fued-server.herokuapp.com/';
     let conn = io(url + 'games');
     this.setState({conn});
+    }
     //todo set up disconnection event
     //conn.on('disconnect',()=>{});
   }
@@ -58,7 +64,7 @@ class App extends React.Component {
               <Waiting host={this.state.host} conn = {this.state.conn} room = {this.state.room} updateRoom = {this.updateRoomCode}/>
               </Route>
             <Route exact path="/game">
-              <Game conn = {this.state.conn}/>
+              <Game conn = {this.state.conn} host={this.state.host}/>
               </Route>
           </Switch>
       </main>
