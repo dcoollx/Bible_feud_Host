@@ -6,8 +6,7 @@ export default class Game extends React.Component{
     stage : 'research',
     scoreboard : [],
     bibleSection : 'GEN 1:1 - 2:5',
-    questions : [{q:'What was Addam\'s wife named', answers: ['Eve','betty','Harley Quinn','Evellyne']},{q:'This is the second Question', a:'Eve', wrong1 : 'betty',wrong2 : 'Harley Quinn', wrong3 : 'Evellyne'}],
-    currentQuestion : 0,
+    question : {q:'This is a test question', answers: ['if you see this','Something is ','Not working','properly']},
     myanswer:null,
     maxTime : 5,
   };
@@ -68,27 +67,14 @@ export default class Game extends React.Component{
   render(){
     //this.setState({stageChanged :false});
   if(this.state.stage === 'research'){
-      if(this.state.timer.clock >= this.state.maxTime){
           this.changeStage('question',30);
-      }
+
     return (
     <div id="game">
       <h1>{Math.floor((this.state.maxTime - this.state.timer.clock) / 60) + ':' + (this.state.maxTime - this.state.timer.clock < 10 ? '0' : '') + Math.floor((this.state.maxTime - this.state.timer.clock) % 60)}</h1>
       <h2>Carefully read: {this.state.bibleSection}</h2>
     </div>);
   }else if(this.state.stage === 'question'){
-  
-    if(this.state.timer.clock > this.state.maxTime && this.state.currentQuestion < this.state.questions.length){
-      let currentQuestion = this.state.currentQuestion
-      currentQuestion++; 
-      this.setState({currentQuestion, myanswer:null});
-      this.resetClock(currentQuestion);
-      //need to reset clock
-      if(currentQuestion > this.state.questions.length){
-        this.changeStage('round',15);
-      }
-      //this.props.conn.emit('question',this.state.questions[this.state.currentQuestion])
-  }
   //console.log(this.state.questions[this.state.currentQuestion])
   let answers;
     if(!this.props.host){
