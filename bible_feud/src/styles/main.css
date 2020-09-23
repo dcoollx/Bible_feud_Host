@@ -1,4 +1,6 @@
-/* this file should be used to import other css files */
+document, main, body {
+  margin-left: auto;
+  margin-right: auto;
+}
 
-@import './home.css';
-@import './game.css';
+/*# sourceMappingURL=main.css.map */
