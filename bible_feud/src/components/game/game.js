@@ -1,13 +1,25 @@
 import React from 'react';
+import timer from '../../utilities/timer';
+var verbose = true;
+function log(txt){
+  if(verbose)
+    console.log(txt)
+}
 
 export default class Game extends React.Component{
+  constructor(props){
+    super(props);
+    this.stage = 'research';
+
+  }
+
   state = {
-    timer : {start : Date.now(), tick : {}, clock : '0:00'},
+    timer : new timer(),
+    currentQuestion :0,
     stage : 'research',
-    scoreboard : [],
+    scoreboard : [{name : 'player_one', score : 0 }],
     bibleSection : 'GEN 1:1 - 2:5',
-    questions : [{q:'What was Addam\'s wife named', answers: ['Eve','betty','Harley Quinn','Evellyne']},{q:'This is the second Question', a:'Eve', wrong1 : 'betty',wrong2 : 'Harley Quinn', wrong3 : 'Evellyne'}],
-    currentQuestion : 0,
+    questions : [{q:'This is a test question', answers: ['If You','See this','Something is','wrong']}],
     myanswer:null,
     maxTime : 5,
   };
@@ -22,37 +34,84 @@ export default class Game extends React.Component{
 
 
   }
+  
   componentDidMount(){
     //
+    if(!this.props.conn){
+      window.location.pathname = '/';
+    }
+    this.state.timer.startTimer(this);
+    //custom events
+    document.addEventListener('finished',()=>{
+      console.log('timer')
+      switch(this.state.stage){
+        case 'research' : 
+        this.changeStage('question');
+        break;
+        case 'question':
+          if(this.state.currentQuestion >= this.state.questions.length - 1){
+            this.changeStage('roundEnd')
+          }else{
+            let q = this.state.currentQuestion;
+            q++;
+            console.log('current question', q);
+            this.setState({currentQuestion : q});
+          }
+          break;
+        default:
+          //TODO get new set of questions
+          this.changeStage('research');
+          break;
+      }
 
-  if(!this.props.conn){
-    window.location.pathname = '/';
-  }
-  if(this.props.host){//if ur the host keep trac of right answer and mix them up
-    let answers = {//TODO shuffle answers
-   };
-  this.getQuestion();
-  }
-    this.setState({
-    timer : {start : Date.now(), tick : setInterval(()=>{
-      let newTimer = {...this.state.timer}
-      newTimer.clock = new Date(Date.now() - this.state.timer.start).getSeconds();
-      this.setState({timer : newTimer})
-    },100)}
-  });
-    this.props.conn.on('questions',(questions)=>{
-      console.log('recived questions');
-      this.setState({questions})
     });
+    //
+    this.props.conn.on('disconnect',()=>{
+      alert('server commuication error. redirecting to home');
+      window.location.pathname = '/';
+
+    });
+  this.props.conn.on('roundStart',(q)=>{
+    log('round start');
+      this.setState({bibleSection : q.bibleSection});
+      //this.state.timer.fromJson(q.timer)
+
+  });
+  this.props.conn.on('nextQuestion',(q)=>{
+    log('next question')
+      this.setState({question : q.q});
+      //this.state.timer.fromJson(q.timer);
+    });
+  this.props.conn.on('close',()=>{
+    log('closed')
+    //room was closed
+    alert('room was closed, redirecting to lobby');
+    window.location.pathname = '/';
+  });
+  if(this.props.host){//if ur the host setup
+    
+  this.getQuestion();
+  this.props.conn.emit('nextRound', {bibleSection : this.state.bibleSection});
+  //send a question
+  }else{
+
+   //
+  }
+ // this.setState({timer :new timer()})
   }
   componentWillUnmount(){
-    clearInterval(this.state.timer.tick);
+    if(this.props.host){
+      this.props.conn.emit('close');//if host leaves, close the room
+      this.state.timer.destroy();
+    }
+    this.state.timer.destroy();
     console.log('leaving');
     this.props.conn.emit('leave',this.props.host);
   }
   changeStage(stage,maxTime=300){
     //maxTime = 5;//for testing
-    this.resetClock();
+    //this.state.timer.reset();
+    this.stage = stage;
     this.setState({stage,maxTime});
   }
 
@@ -67,29 +126,16 @@ export default class Game extends React.Component{
   }
   render(){
     //this.setState({stageChanged :false});
-  if(this.state.stage === 'research'){
-      if(this.state.timer.clock >= this.state.maxTime){
-          this.changeStage('question',30);
-      }
+  if(this.stage === 'research'){
+////////////////////////////////////////////////////////////RESEARCH
     return (
     <div id="game">
-      <h1>{Math.floor((this.state.maxTime - this.state.timer.clock) / 60) + ':' + (this.state.maxTime - this.state.timer.clock < 10 ? '0' : '') + Math.floor((this.state.maxTime - this.state.timer.clock) % 60)}</h1>
+      <h1>{this.state.timer.output}</h1>
       <h2>Carefully read: {this.state.bibleSection}</h2>
     </div>);
-  }else if(this.state.stage === 'question'){
-  
-    if(this.state.timer.clock > this.state.maxTime && this.state.currentQuestion < this.state.questions.length){
-      let currentQuestion = this.state.currentQuestion
-      currentQuestion++; 
-      this.setState({currentQuestion, myanswer:null});
-      this.resetClock(currentQuestion);
-      //need to reset clock
-      if(currentQuestion > this.state.questions.length){
-        this.changeStage('round',15);
-      }
-      //this.props.conn.emit('question',this.state.questions[this.state.currentQuestion])
-  }
-  //console.log(this.state.questions[this.state.currentQuestion])
+
+    ///////////////////////////////////////////////////////Question
+  }else if(this.stage === 'question'){
   let answers;
     if(!this.props.host){
       //TODO error handle for if no questions
@@ -108,22 +154,32 @@ export default class Game extends React.Component{
   }
     return (
     <div id="game">
-      <h1>{Math.floor((this.state.maxTime - this.state.timer.clock) / 60) + ':'+(this.state.maxTime - this.state.timer.clock < 10 ? '0' : '') +Math.floor((this.state.maxTime - this.state.timer.clock) % 60)}</h1>
+      <h1>{this.state.timer.output}</h1>
     <h2 className="question">{this.state.questions[this.state.currentQuestion].q}</h2>
       <ul>
         {answers}
       </ul>
     </div>)
-  }else if(this.state.stage === 'round'){
-    if(this.state.timer.clock >= this.state.maxTime)
-    //this.state.scoreboard.map()
+  }else if(this.state.stage === 'roundEnd'){
+    let scoreboard = this.state.scoreboard.map((player)=>{
+      return(
+        <tr>
+          <td>{player.name}</td>
+          <td>{player.score}</td>
+        </tr>
+      );
+    });
+   
     return (<div id="endofround">
       <h1>Well Done. Lets Check the scoreboard</h1>
       <table>
         <thead>
-          <th>Player</th>
-          <th>Score</th>
+          <td>Player</td>
+          <td>Score</td>
         </thead>
+        <tbody>
+          {scoreboard}
+        </tbody>
         
       </table>
     </div>);
