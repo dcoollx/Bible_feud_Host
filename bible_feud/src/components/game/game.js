@@ -1,12 +1,23 @@
 import React from 'react';
-import Timer from '../../utilities/timer';
+import timer from '../../utilities/timer';
+var verbose = true;
+function log(txt){
+  if(verbose)
+    console.log(txt)
+}
 
 export default class Game extends React.Component{
+  constructor(props){
+    super(props);
+    this.stage = 'research';
+
+  }
+
   state = {
-    timer : new Timer(),
+    timer : new timer(),
     currentQuestion :0,
     stage : 'research',
-    scoreboard : [],
+    scoreboard : [{name : 'player_one', score : 0 }],
     bibleSection : 'GEN 1:1 - 2:5',
     questions : [{q:'This is a test question', answers: ['if you see this','Something is ','Not working','properly']}],
     myanswer:null,
@@ -23,29 +34,59 @@ export default class Game extends React.Component{
 
 
   }
+  
   componentDidMount(){
     //
+    if(!this.props.conn){
+      window.location.pathname = '/';
+    }
+    this.state.timer.startTimer(this);
+    //custom events
+    document.addEventListener('finished',()=>{
+      console.log('timer')
+      switch(this.state.stage){
+        case 'research' : 
+        this.changeStage('question');
+        break;
+        case 'question':
+          if(this.state.currentQuestion >= this.state.questions.length - 1){
+            this.changeStage('roundEnd')
+          }else{
+            let q = this.state.currentQuestion;
+            q++;
+            console.log('current question', q);
+            this.setState({currentQuestion : q});
+          }
+          break;
+        default:
+          //TODO get new set of questions
+          this.changeStage('research');
+          break;
+      }
+
+    });
+    //
+    this.props.conn.on('disconnect',()=>{
+      alert('server commuication error. redirecting to home');
+      window.location.pathname = '/';
+
+    });
   this.props.conn.on('roundStart',(q)=>{
-      this.setState({bibleSection : q.bibleSection, timer : q.timer})
+    log('round start');
+      this.setState({bibleSection : q.bibleSection});
+      //this.state.timer.fromJson(q.timer)
 
   });
   this.props.conn.on('nextQuestion',(q)=>{
-      this.setState({question : q.q, timer : q.timer});
+    log('next question')
+      this.setState({question : q.q});
+      //this.state.timer.fromJson(q.timer);
     });
   this.props.conn.on('close',()=>{
+    log('closed')
     //room was closed
     alert('room was closed, redirecting to lobby');
     window.location.pathname = '/';
-  });
-  if(!this.props.conn){
-    window.location.pathname = '/';
-  }
-  this.setState({
-    timer : {start : Date.now(), tick : setInterval(()=>{//TODO server determins start time
-      let newTimer = {...this.state.timer}
-      newTimer.clock = new Date(Date.now() - this.state.timer.start).getSeconds();
-      this.setState({timer : newTimer})
-    },100)}
   });
   if(this.props.host){//if ur the host setup
     
@@ -56,36 +97,36 @@ export default class Game extends React.Component{
 
    //
   }
+ // this.setState({timer :new timer()})
   }
   componentWillUnmount(){
     if(this.props.host){
-      this.props.conn.broadcast('close');//if host leaves, close the room
+      this.props.conn.emit('close');//if host leaves, close the room
       this.state.timer.destroy();
     }
-    clearInterval(this.state.timer.tick);
+    this.state.timer.destroy();
     console.log('leaving');
     this.props.conn.emit('leave',this.props.host);
   }
   changeStage(stage,maxTime=300){
     //maxTime = 5;//for testing
-    this.resetClock();
+    //this.state.timer.reset();
+    this.stage = stage;
     this.setState({stage,maxTime});
   }
 
   render(){
     //this.setState({stageChanged :false});
-  if(this.state.stage === 'research'){
-    if(this.state.timer){
-          //this.changeStage('question',30);
-    }
-
+  if(this.stage === 'research'){
+////////////////////////////////////////////////////////////RESEARCH
     return (
     <div id="game">
-      <h1>{this.state.timer.getClock()}</h1>
+      <h1>{this.state.timer.output}</h1>
       <h2>Carefully read: {this.state.bibleSection}</h2>
     </div>);
-  }else if(this.state.stage === 'question'){
-  //console.log(this.state.questions[this.state.currentQuestion])
+
+    ///////////////////////////////////////////////////////Question
+  }else if(this.stage === 'question'){
   let answers;
     if(!this.props.host){
       //TODO error handle for if no questions
@@ -104,22 +145,32 @@ export default class Game extends React.Component{
   }
     return (
     <div id="game">
-      <h1>{Math.floor((this.state.maxTime - this.state.timer.clock) / 60) + ':'+(this.state.maxTime - this.state.timer.clock < 10 ? '0' : '') +Math.floor((this.state.maxTime - this.state.timer.clock) % 60)}</h1>
+      <h1>{this.state.timer.output}</h1>
     <h2 className="question">{this.state.questions[this.state.currentQuestion].q}</h2>
       <ul>
         {answers}
       </ul>
     </div>)
   }else if(this.state.stage === 'roundEnd'){
-    if(this.state.timer.clock >= this.state.maxTime)
-    //this.state.scoreboard.map()
+    let scoreboard = this.state.scoreboard.map((player)=>{
+      return(
+        <tr>
+          <td>{player.name}</td>
+          <td>{player.score}</td>
+        </tr>
+      );
+    });
+   
     return (<div id="endofround">
       <h1>Well Done. Lets Check the scoreboard</h1>
       <table>
         <thead>
-          <th>Player</th>
-          <th>Score</th>
+          <td>Player</td>
+          <td>Score</td>
         </thead>
+        <tbody>
+          {scoreboard}
+        </tbody>
         
       </table>
     </div>);
