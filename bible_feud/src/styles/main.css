@@ -1,6 +1,193 @@
-document, main, body {
+#home .explaination {
+  padding-left: 15%;
+  padding-right: 15%;
+}
+#home .jumbotron {
+  display: grid;
+  grid-template-columns: 33% 33% 33%;
+  min-height: 85vh;
+  min-width: 100vw;
+  border: 2px black solid;
+  align-content: center;
+  justify-content: center;
+}
+#home .jumbotron button:not([type=submit]) {
+  width: 100%;
+  height: 10rem;
+  font-size: 3rem;
+  color: white;
+  background-color: black;
+  border-radius: 0%;
+  box-shadow: 3rem black;
+}
+#home .jumbotron button:hover {
+  background-color: white;
+  color: black;
+}
+#home .jumbotron h1 {
+  color: black;
+  font-size: 9rem;
+  height: 100%;
+  display: block;
+  grid-column: span 3;
+  text-align: center;
+  align-content: center;
+  justify-content: center;
+  margin-top: auto;
+  padding: auto;
+}
+#home .jumbotron .playBtn {
   margin-left: auto;
-  margin-right: auto;
+}
+#home .jumbotron .controls {
+  grid-column: 2;
+}
+#home #signin {
+  /* position: relative; */
+}
+
+header nav#main {
+  background-color: black;
+  color: white;
+  min-height: 5vh;
+  line-height: 5vh;
+  padding: 7px;
+}
+@media only screen and (min-width: 1100px) {
+  header nav#main {
+    word-spacing: 15px;
+    width: 100vw;
+    margin: none;
+    padding-left: 5vw;
+    min-height: 5vh;
+    line-height: 5vh;
+  }
+  header nav#main > a {
+    color: white;
+    font-size: 1 rem;
+  }
+}
+
+#game {
+  display: grid;
+  margin-top: 3rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  row-gap: 5rem;
+  grid-template-columns: auto 20% 20% 20% auto;
+}
+#game h1 {
+  grid-column: 2/5;
+  width: 100%;
+}
+#game #question, #game h1, #game #source {
+  grid-column: 2/5;
+  text-align: center;
+}
+#game #answers {
+  display: grid;
+  grid-column: 2/5;
+  grid-template-columns: 50% 50%;
+  row-gap: 10px;
+  column-gap: 10px;
+  padding-inline-start: 0px;
+}
+#game #answers li, #game #answers button {
+  padding: 5rem;
+  list-style: none;
+  background-color: black;
+  color: white;
+}
+
+#endofround {
+  display: grid;
+  margin-top: 3rem;
+  margin-left: 3rem;
+  margin-right: 3rem;
+  row-gap: 5rem;
+  grid-template-columns: auto 20% 20% 20% auto;
+}
+#endofround h1, #endofround table {
+  grid-column: 2/5;
+}
+#endofround h1 {
+  text-align: center;
+}
+#endofround table {
+  border-collapse: collapse;
+  border: 2px solid black;
+}
+#endofround table td {
+  border: 2px solid black;
+}
+#endofround table thead > td {
+  color: white;
+  background-color: black;
+}
+
+#waiting {
+  margin: auto;
+  margin-top: 30%;
+  padding: 5%;
+}
+#waiting progress {
+  width: 95%;
+}
+#waiting button {
+  color: white;
+  background-color: green;
+}
+
+html, body, .root {
+  max-width: 100vw;
+  margin: 0px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: white;
+}
+
+form {
+  justify-content: center;
+  row-gap: 4px;
+  align-content: center;
+  background-color: white;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  padding: 10%;
+  border-radius: 15px;
+  border: black solid 1px;
+}
+form button[type=submit] {
+  grid-column: span 2;
+}
+form input[type=text] {
+  width: 200px;
+}
+
+a:hover {
+  text-decoration: wavy;
+}
+
+.hide {
+  display: none !important;
+}
+
+main {
+  height: 100vh;
+}
+main button {
+  border: none;
+  border-radius: 15px;
+  align-self: center;
+}
+main button:hover {
+  background-color: black;
+  color: white;
 }
 
 /*# sourceMappingURL=main.css.map */

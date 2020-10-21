@@ -1,0 +1,60 @@
+@use 'variables.scss';
+
+#game{
+    display: grid;
+    margin-top:3rem;
+    margin-left:3rem;
+    margin-right:3rem;
+    row-gap: 5rem;
+    grid-template-columns: auto 20% 20% 20% auto;
+    h1{
+        grid-column: 2/5;
+        width:100%;
+
+    }
+    #question, h1, #source{
+        grid-column: 2/5;
+        text-align: center;
+    }
+    #answers{
+        display:grid;
+        grid-column: 2/5;
+        grid-template-columns: 50% 50%;
+        row-gap: 10px;
+        column-gap: 10px;
+        padding-inline-start: 0px;
+        li, button{
+            padding:5rem;
+            list-style: none;
+            background-color: black;
+            color:white;
+        }
+    }
+}
+
+#endofround{
+    
+    display: grid;
+    margin-top:3rem;
+    margin-left:3rem;
+    margin-right:3rem;
+    row-gap: 5rem;
+    grid-template-columns: auto 20% 20% 20% auto;
+    h1, table{
+        grid-column: 2/5;
+    }
+    h1{
+        text-align: center;
+    }
+    table{
+        border-collapse: collapse;
+        border: 2px solid black;
+        td{
+            border: 2px solid black;
+        }
+        thead > td{
+            color: white;
+            background-color: black;
+        }
+    }
+}

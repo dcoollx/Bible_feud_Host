@@ -1,4 +1,60 @@
-document, main, body{
-    margin-left : auto;
-    margin-right : auto;
+@use 'home.scss';
+@use 'header.scss';
+@use 'game.scss';
+@use 'waiting.scss';
+@use 'variables.scss';
+
+html, body, .root{
+    max-width:100vw;
+    margin:0px;
 }
+*{
+    box-sizing: border-box;
+}
+
+
+a{
+    color:white;
+}
+form{
+    justify-content: center;
+    row-gap: 4px;
+    align-content: center;
+    background-color: white;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    padding: 10%;
+    border-radius: 15px;
+    border: black solid 1px;
+    button[type="submit"]{
+        grid-column: span 2;
+    }
+    input[type="text"]{
+        width:200px;
+    }
+}
+a:hover{
+    text-decoration: wavy;
+}
+.hide{
+    display: none !important;
+}
+
+main{
+    height:100vh;
+    //background-color: variables.$main;
+    button{
+        border : none;
+        border-radius: 15px;
+        align-self: center;
+    }
+    button:hover{
+        background-color: black;//variables.$dark;
+        color:white;
+    }
+  
+        
+    
+}
+  
+  

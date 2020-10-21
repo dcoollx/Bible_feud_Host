@@ -1,12 +1,13 @@
 import React from 'react';
 import io from 'socket.io-client';
 import { BrowserRouter as Router, Route, Switch, Link} from 'react-router-dom';
-import './App.css';
+import './styles/main.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'font-awesome/css/font-awesome.css';
 import dotenv from 'dotenv';
 
 //components
+import Header from './components/header/header';
 import Home from './components/home/home';
 import Waiting from './components/lobby/waiting';
 import Game from './components/game/game';
@@ -34,7 +35,7 @@ class App extends React.Component {
     if(this.state.conn){
       this.state.conn.emit('leave');
     }else{
-    let url = process.env.SERVER_URL || '10.0.0.109:8000/';
+    let url = process.env.SERVER_URL || 'localhost:8000/';
     //'https://bible-fued-server.herokuapp.com/';
     let conn = io(url + 'games');
     this.setState({conn});
@@ -47,15 +48,8 @@ class App extends React.Component {
   return (
     <Router>
     <div className="App">
-      <header>
-        <nav id="main" aria-label="Main">
-          <Link to="/">Home </Link>
-          <Link>Language </Link>
-          <Link>Login </Link>
-          <Link>Play</Link>
-        </nav>
-      </header>
-      <main className="container">
+      <Header/>
+      <main >
          <Switch>
            <Route exact path="/" >
            <Home toggleHost={this.toggleHost} connect = {this.connectToSoc} conn={this.state.conn} updateRoom = {this.updateRoomCode}/>

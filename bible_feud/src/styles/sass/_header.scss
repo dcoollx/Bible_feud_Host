@@ -1,0 +1,27 @@
+@use 'variables.scss';
+header{
+
+ //border-bottom: 2px solid variables.$dark;
+  nav#main{
+     background-color: black;//variables.$accent;
+      color:white;
+      min-height: 5vh;
+      line-height: 5vh;
+      padding: 7px;
+  }
+
+@media only screen and (min-width: 1100px){
+    nav#main{
+      word-spacing: 15px;
+      width:100vw;
+      margin:none;
+     padding-left : 5vw;
+      min-height: 5vh;
+      line-height: 5vh;
+    }
+    nav#main > a{
+      color:white;
+      font-size: 1 rem;
+    }
+  }
+}

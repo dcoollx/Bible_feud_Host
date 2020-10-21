@@ -1,0 +1,62 @@
+@use 'variables';
+#home{
+
+    .explaination{
+        padding-left:15%;
+        padding-right:15%;
+    }
+
+
+    .jumbotron{
+        //background: radial-gradient(circle at center, variables.$white, variables.$main );
+        display: grid;
+        grid-template-columns: 33% 33% 33%;
+        min-height : 85vh;
+        min-width:100vw;
+        border : 2px black solid;
+        align-content: center;
+        justify-content: center;
+
+        button:not([type="submit"]){
+            width:100%;
+            height:10rem;
+            font-size: 3rem;
+            color:white;
+            background-color: black;
+            border-radius: 0%;
+            box-shadow: 3rem black;
+        }
+        button:hover{
+            background-color: white;
+            color:black;
+        }
+        h1{
+            color: black;// variables.$rich;
+            font-size: 9rem;
+            height: 100%;
+            display:block;
+            grid-column: span 3;
+            text-align: center;
+            align-content: center;
+            justify-content: center;
+            margin-top:auto;
+            padding: auto;
+            }
+            .playBtn{
+                margin-left:auto;
+               
+            }
+            .controls{
+                grid-column: 2;
+               
+            }
+    }
+
+    #signin{
+        /* position: relative; */
+     
+    }
+    
+
+
+}

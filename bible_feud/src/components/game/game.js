@@ -131,7 +131,7 @@ export default class Game extends React.Component{
     return (
     <div id="game">
       <h1>{this.state.timer.output}</h1>
-      <h2>Carefully read: {this.state.bibleSection}</h2>
+      <h2 id="source">Carefully read: {this.state.bibleSection}</h2>
     </div>);
 
     ///////////////////////////////////////////////////////Question
@@ -155,8 +155,8 @@ export default class Game extends React.Component{
     return (
     <div id="game">
       <h1>{this.state.timer.output}</h1>
-    <h2 className="question">{this.state.questions[this.state.currentQuestion].q}</h2>
-      <ul>
+    <h2 id="question">{this.state.questions[this.state.currentQuestion].q}</h2>
+      <ul id="answers">
         {answers}
       </ul>
     </div>)
