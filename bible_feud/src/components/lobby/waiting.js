@@ -46,12 +46,12 @@ componentDidMount(){
   });
   
 }
-componentWillUnmount(){
+/* componentWillUnmount(){
   console.log('leaving');
   this.props.conn.emit('leave',this.props.host);
   document.getElementsByTagName('title')[0].innerHTML = 'Bible Feud'
 
-}
+} */
 startGame(){
   if(this.props.conn){
     this.props.conn.broadcast.in(this.props.room.roomCode).emit('startGame');
@@ -74,7 +74,7 @@ return (
   <progress></progress>
   
   <button disabled={!this.props.host} onClick={(e)=>{
-    this.props.conn.emit('start');
+    this.props.conn.emit('startGame');
   }}>Start Now</button>
   </div>
   </div>

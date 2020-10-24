@@ -35,7 +35,8 @@ class App extends React.Component {
     if(this.state.conn){
       this.state.conn.emit('leave');
     }else{
-    let url = 'https://bible-fued-server.herokuapp.com/';
+    let url = process.env.URL || 'localhost:8000/';
+    console.log(url);
     let conn = io(url + 'games');
     this.setState({conn});
     }
