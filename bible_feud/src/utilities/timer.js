@@ -1,6 +1,6 @@
 export default class timer{
 
-    constructor(maxTime = 120){
+    constructor(maxTime =10){
         this.maxTime = maxTime;
         this.start = Date.now();
         this.output = this.maxTime/60;

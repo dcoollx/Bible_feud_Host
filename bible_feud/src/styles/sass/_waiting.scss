@@ -1,13 +1,30 @@
 #waiting{
 
-    margin:auto;
-    margin-top:30%;
-    padding: 5%;
-    progress{
-        width:95%;
+ul{
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 15px;
+    height:60vh;
+    .player{
+        line-height:20px;
+        list-style: none;
+        border: 2px solid black;
+        height:20px;
     }
-    button{
-        color:white;
-        background-color: green;
-    }
+}
+#details{
+    
+}
+padding: 5%;
+progress{
+    width:95%;
+}
+button{
+    color:white;
+    background-color: green;
+    border-radius:0px;
+}
+button:disabled{
+    background-color: grey;
+}
 }

@@ -4,17 +4,16 @@
 }
 #home .jumbotron {
   display: grid;
-  grid-template-columns: 33% 33% 33%;
+  grid-template-columns: auto 50% auto;
   min-height: 85vh;
   min-width: 100vw;
   border: 2px black solid;
   align-content: center;
   justify-content: center;
+  column-gap: 5px;
 }
 #home .jumbotron button:not([type=submit]) {
   width: 100%;
-  height: 10rem;
-  font-size: 3rem;
   color: white;
   background-color: black;
   border-radius: 0%;
@@ -27,13 +26,13 @@
 #home .jumbotron h1 {
   color: black;
   font-size: 9rem;
+  margin: 0px;
   height: 100%;
   display: block;
-  grid-column: span 3;
+  grid-column: 2;
   text-align: center;
   align-content: center;
   justify-content: center;
-  margin-top: auto;
   padding: auto;
 }
 #home .jumbotron .playBtn {
@@ -44,6 +43,34 @@
 }
 #home #signin {
   /* position: relative; */
+}
+#home #signin button {
+  font-size: 3rem;
+  margin: 3px;
+}
+#home form {
+  display: grid;
+  grid-template-columns: 30% 70%;
+  justify-content: center;
+  width: 50%;
+  height: 15rem;
+  row-gap: 4px;
+  align-content: center;
+  background-color: white;
+  border: black solid 1px;
+  padding: 3rem;
+}
+#home form button[type=submit] {
+  grid-column: span 2;
+  border-radius: 0%;
+  color: white;
+  background-color: black;
+  margin: 0px;
+}
+#home form button[type=submit]:hover {
+  color: black;
+  background-color: white;
+  border: 2px solid black;
 }
 
 header nav#main {
@@ -92,7 +119,7 @@ header nav#main {
   column-gap: 10px;
   padding-inline-start: 0px;
 }
-#game #answers li, #game #answers button {
+#game #answers .answer {
   padding: 5rem;
   list-style: none;
   background-color: black;
@@ -126,9 +153,19 @@ header nav#main {
 }
 
 #waiting {
-  margin: auto;
-  margin-top: 30%;
   padding: 5%;
+}
+#waiting ul {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 15px;
+  height: 60vh;
+}
+#waiting ul .player {
+  line-height: 20px;
+  list-style: none;
+  border: 2px solid black;
+  height: 20px;
 }
 #waiting progress {
   width: 95%;
@@ -136,6 +173,10 @@ header nav#main {
 #waiting button {
   color: white;
   background-color: green;
+  border-radius: 0px;
+}
+#waiting button:disabled {
+  background-color: grey;
 }
 
 html, body, .root {
@@ -151,24 +192,6 @@ a {
   color: white;
 }
 
-form {
-  justify-content: center;
-  row-gap: 4px;
-  align-content: center;
-  background-color: white;
-  display: grid;
-  grid-template-columns: 50% 50%;
-  padding: 10%;
-  border-radius: 15px;
-  border: black solid 1px;
-}
-form button[type=submit] {
-  grid-column: span 2;
-}
-form input[type=text] {
-  width: 200px;
-}
-
 a:hover {
   text-decoration: wavy;
 }
@@ -177,9 +200,6 @@ a:hover {
   display: none !important;
 }
 
-main {
-  height: 100vh;
-}
 main button {
   border: none;
   border-radius: 15px;

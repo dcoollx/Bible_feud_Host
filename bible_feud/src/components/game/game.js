@@ -140,7 +140,7 @@ export default class Game extends React.Component{
     if(!this.props.host){
       //TODO error handle for if no questions
       answers = this.state.questions[this.state.currentQuestion].answers.map((a, i)=>{
-    return (<li key={i}><button data-key = {i} onClick={(e)=>{
+    return (<li key={i} className="answer"><button data-key = {i} onClick={(e)=>{
       let answer = e.target.getAttribute('data-key');
       this.setState({myanswer : answer},()=>{
         this.props.conn.emit('answer',answer);
