@@ -21,7 +21,7 @@ export default class Game extends React.Component{
     bibleSection : 'GEN 1:1 - 2:5',
     questions : [{q:'This is a test question', answers: ['If You','See this','Something is','wrong']}],
     myanswer:null,
-    maxTime : 5,
+    maxTime : 120,
   };
   getQuestion(){
     let options = {};
@@ -46,16 +46,30 @@ export default class Game extends React.Component{
       console.log('timer')
       switch(this.state.stage){
         case 'research' : 
-        this.changeStage('question');
+        this.changeStage('question',30);
         break;
         case 'question':
-          if(this.state.currentQuestion >= this.state.questions.length - 1){
-            this.changeStage('roundEnd')
+          if((this.state.currentQuestion + 1) % 5 == 0){
+            this.changeStage('roundEnd',15)
           }else{
             let q = this.state.currentQuestion;
             q++;
             console.log('current question', q);
             this.setState({currentQuestion : q});
+          }
+          break;
+        case 'roundEnd':
+          if(this.state.currentQuestion === this.state.questions.length - 1){
+            //game is over
+            console.log('end of game');
+            //this.state.timer.stop();
+
+          }else{
+            let q = this.state.currentQuestion;
+            q++;
+            console.log('current question', q);
+            this.setState({currentQuestion : q});
+            this.changeStage('question',30)//TODO this should go to research
           }
           break;
         default:
@@ -112,6 +126,7 @@ export default class Game extends React.Component{
     //maxTime = 5;//for testing
     //this.state.timer.reset();
     this.stage = stage;
+    this.state.timer.setMaxTime(maxTime);
     this.setState({stage,maxTime});
   }
 
@@ -174,8 +189,8 @@ export default class Game extends React.Component{
       <h1>Well Done. Lets Check the scoreboard</h1>
       <table>
         <thead>
-          <td>Player</td>
-          <td>Score</td>
+          <th>Player</th>
+          <th>Score</th>
         </thead>
         <tbody>
           {scoreboard}

@@ -18,7 +18,7 @@ export default class timer{
                 document.dispatchEvent(this.event)
                 this.reset()
             }
-        },1000);
+        },500);
 
     }
     setMaxTime(t){
@@ -41,7 +41,16 @@ export default class timer{
         this.complete = false;
     }
     getClock(){
-        return Math.floor((this.maxTime - this.clock) / 60) + ':' + (this.maxTime - this.clock < 10 ? '0' : '') + Math.floor((this.maxTime - this.clock) % 60)
+        let clock = {minute:'00',second:'00', get:()=>{
+            return this.minute + ':' + this.second
+        }}
+        clock.minute = Math.floor((this.maxTime - this.clock) / 60) 
+        clock.second =  Math.floor((this.maxTime - this.clock) % 60);
+        clock.second = clock.second < 10 ? '0'+ clock.second : clock.second;
+        clock.minute = clock.minute < 10 ? '0'+ clock.minute : clock.minute;
+        clock.second = clock.second < 1 ? '0': clock.second;
+        clock.minute = clock.minute < 1 ? '0' : clock.minute;
+        return clock.minute + ':' + clock.second;
     }
 
     destroy(){
