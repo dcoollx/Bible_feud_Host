@@ -48,7 +48,7 @@ export default class timer{
         clock.second =  Math.floor((this.maxTime - this.clock) % 60);
         clock.second = clock.second < 10 ? '0'+ clock.second : clock.second;
         clock.minute = clock.minute < 10 ? '0'+ clock.minute : clock.minute;
-        clock.second = clock.second < 1 ? '0': clock.second;
+        clock.second = clock.second < 1 ? '0'+ clock.second : clock.second;
         clock.minute = clock.minute < 1 ? '0' : clock.minute;
         return clock.minute + ':' + clock.second;
     }

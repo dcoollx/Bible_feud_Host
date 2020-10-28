@@ -25,10 +25,10 @@ export default class Game extends React.Component{
   };
   getQuestion(){
     let options = {};
-    let url = process.env.SERVER_URL || 'http://localhost:8000';
+    let url = process.env.REACT_APP_URL || 'http://localhost:8000';
     fetch(url + '/questions',options).then(res=>res.ok ? res.json() : Promise.reject(res.json())).then(res=>{
       this.setState({questions : res.questions},()=>{
-        this.props.conn.emit('question',this.state.questions);
+        this.props.conn.emit('question',{questions : this.state.questions});
       });
     });
 
@@ -37,6 +37,7 @@ export default class Game extends React.Component{
   
   componentDidMount(){
     //
+    var that = this;
     if(!this.props.conn){
       window.location.pathname = '/';
     }
@@ -55,7 +56,8 @@ export default class Game extends React.Component{
             let q = this.state.currentQuestion;
             q++;
             console.log('current question', q);
-            this.setState({currentQuestion : q});
+            this.setState({currentQuestion : q, myanswer : null});
+            document.querySelector('.picked').classList.remove('picked');
           }
           break;
         case 'roundEnd':
@@ -80,12 +82,16 @@ export default class Game extends React.Component{
 
     });
     //
-    this.props.conn.on('disconnect',()=>{
+    this.props.conn.on('cancel',()=>{
+      alert('host has closed the room');
+      window.location.pathname = '/';
+    });
+  this.props.conn.on('disconnect',()=>{
       alert('server commuication error. redirecting to home');
       window.location.pathname = '/';
 
     });
-  this.props.conn.on('roundStart',(q)=>{
+    this.props.conn.on('roundStart',(q)=>{
     log('round start');
       this.setState({bibleSection : q.bibleSection});
       //this.state.timer.fromJson(q.timer)
@@ -105,9 +111,15 @@ export default class Game extends React.Component{
   if(this.props.host){//if ur the host setup
     
   this.getQuestion();
+  //this.props.conn.emit('question', {questions : this.state.questions});
   this.props.conn.emit('nextRound', {bibleSection : this.state.bibleSection});
-  //send a question
+  console.log('sent questions');
   }else{
+    this.props.conn.on('questions',function(q){
+      console.log('reviced' + q.questions.length + 'questions');
+      console.log(this.state);
+      that.setState({questions : q.questions});
+    })
 
    //
   }
@@ -155,12 +167,13 @@ export default class Game extends React.Component{
     if(!this.props.host){
       //TODO error handle for if no questions
       answers = this.state.questions[this.state.currentQuestion].answers.map((a, i)=>{
-    return (<li key={i} className="answer"><button data-key = {i} onClick={(e)=>{
+    return (<button key={i} className={"answer"} data-key = {i} onClick={(e)=>{
       let answer = e.target.getAttribute('data-key');
+      e.target.classList.add('picked');
       this.setState({myanswer : answer},()=>{
         this.props.conn.emit('answer',answer);
       });
-    }} disabled = {this.state.myanswer ? true : false}>{a}</button></li>)
+    }} disabled = {this.state.myanswer ? true : false}>{a}</button>)
     });
   }else{
     answers = this.state.questions[this.state.currentQuestion].answers.map((a, i)=>{
